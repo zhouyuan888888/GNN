@@ -8,7 +8,7 @@
 |ind.cora.tx|(1000, 1433)|feature vectors of test samples| 
 |ind.cora.allx|(1708, 1433)|feature vectors of train samples|
 |ind.cora.graph|(2708, 2708)|adjacency matrix for links|
-|ind.cora.text.index|(1000, 1)|indexs for test samples on graph|
+|ind.cora.text.index|(1000, 1)|indexs of test samples on graph|
 
 ## Performance
 ### performance on Cora
@@ -20,7 +20,7 @@
 ## Ablation study
 ### Influence of "pos_weight" (postive weight) used in loss computation
 |model|pos_weight|AUC|AP|
-|:---:|:---:|:---:|
+|:---:|:---:|:---:|:---:|
 |GAE|original value (about 815)|0.9047|0.91322|
 |GAE|1.0|0.5047|0.5047|
 |GAE|50.0|0.5476|0.5482|
