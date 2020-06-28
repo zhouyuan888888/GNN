@@ -45,3 +45,6 @@ When we modify the code and fix the rate for positive and negative samples to 1:
 |GAE|200.0|0.9202|0.9336|
 |GAE|400.0|0.9188|0.9301|
 |GAE|800.0|0.9146|0.9290|    
+
+## Log
+- [] modify the code for training accuracy computation, in which the positive and negative samples are fixed to 1:1
