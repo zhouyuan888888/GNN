@@ -17,9 +17,9 @@
 |GAE|0.9047|0.91322|
 |VGAE|||
 
-![accuracy](https://github.com/zhouyuan888888/GNN//GAE/master/image/ap.png)
-![auc](https://github.com/zhouyuan888888/GNN/GAE/master/image/auc.png)
-![loss](https://github.com/zhouyuan888888/GNN/tree/GAE/master/image/loss.png)
+![accuracy](image/ap.png)
+![auc](image/auc.png)
+![loss](image/loss.png)
 
 
 ## 3. Ablation study
