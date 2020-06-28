@@ -29,6 +29,7 @@
 **Problem**: It is strange that training accuracy is lower than validating accuracy. I guess the reason is owed to different evaluation strategy. During validation the rate for positive samples and negative samples is 1:1, while during traing the rate is much lower.
 
 When we modify the code and fix the rate for positive and negative samples to 1:1 during training accuracy computing, the problem is addressed. The details are summarized as follows:
+
 ![accuracy](image/ap_modify.png)
 ![auc](image/auc_modify.png)
 
