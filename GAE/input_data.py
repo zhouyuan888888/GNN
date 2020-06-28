@@ -35,7 +35,16 @@ def load_data(dataset):
         tx = tx_extended
 
     features = sp.vstack((allx, tx)).tolil()
+
+    """本来前1708个是allx，后1000个是tx。下面的对其进行乱序
+    举个例子：把测试的第一个样本放在2692/2708上"""
+
     features[test_idx_reorder, :] = features[test_idx_range, :]
     adj = nx.adjacency_matrix(nx.from_dict_of_lists(graph))
 
     return adj, features
+
+if __name__ == "__main__":
+    a = np.array([1,2,3,4,5,6])
+    a[[0,1,2]] = a[[2,1,0]]
+    print(a)

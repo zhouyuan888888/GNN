@@ -20,6 +20,7 @@ class OptimizerAE(object):
         self.accuracy = tf.reduce_mean(tf.cast(self.correct_prediction, tf.float32))
 
 
+
 class OptimizerVAE(object):
     def __init__(self, preds, labels, model, num_nodes, pos_weight, norm):
         preds_sub = preds

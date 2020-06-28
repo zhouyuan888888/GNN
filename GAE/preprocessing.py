@@ -5,6 +5,7 @@ import scipy.sparse as sp
 def sparse_to_tuple(sparse_mx):
     if not sp.isspmatrix_coo(sparse_mx):
         sparse_mx = sparse_mx.tocoo()
+
     coords = np.vstack((sparse_mx.row, sparse_mx.col)).transpose()
     values = sparse_mx.data
     shape = sparse_mx.shape
@@ -13,6 +14,8 @@ def sparse_to_tuple(sparse_mx):
 
 def preprocess_graph(adj):
     adj = sp.coo_matrix(adj)
+
+    """用sp.eve构造对角矩阵，囊括了自身与自身的关系"""
     adj_ = adj + sp.eye(adj.shape[0])
     rowsum = np.array(adj_.sum(1))
     degree_mat_inv_sqrt = sp.diags(np.power(rowsum, -0.5).flatten())
@@ -40,8 +43,15 @@ def mask_test_edges(adj):
     # Check that diag is zero:
     assert np.diag(adj.todense()).sum() == 0
 
+    """上三角矩阵,消除了node之间重叠的link，
+    如：1和2,2和1，只取其中一个"""
+
     adj_triu = sp.triu(adj)
     adj_tuple = sparse_to_tuple(adj_triu)
+
+    """edges：共5278个link
+    edges_all：共10556个link"""
+
     edges = adj_tuple[0]
     edges_all = sparse_to_tuple(adj)[0]
     num_test = int(np.floor(edges.shape[0] / 10.))
@@ -59,6 +69,7 @@ def mask_test_edges(adj):
         rows_close = np.all(np.round(a - b[:, None], tol) == 0, axis=-1)
         return np.any(rows_close)
 
+    """错误的link，即link不在edges_all里面，并且它是虚构出来的"""
     test_edges_false = []
     while len(test_edges_false) < len(test_edges):
         idx_i = np.random.randint(0, adj.shape[0])
@@ -105,7 +116,21 @@ def mask_test_edges(adj):
 
     # Re-build adj matrix
     adj_train = sp.csr_matrix((data, (train_edges[:, 0], train_edges[:, 1])), shape=adj.shape)
+
+    """adj_train.T是转置的意思，对构造上三角矩阵所丢失的信息进行恢复"""
+
     adj_train = adj_train + adj_train.T
 
     # NOTE: these edge lists only contain single direction of edge!
     return adj_train, train_edges, val_edges, val_edges_false, test_edges, test_edges_false
+
+if __name__=="__main__":
+    a=np.array([[1,2,3],[4,5,6],[7,8,9]])
+    diags = a.diagonal()
+    matrix_1= sp.dia_matrix(diags,shape=a.shape)
+    matrix_2 = sp.dia_matrix((diags, [0]), shape=a.shape)
+    print(diags)
+    print((diags, [0]))
+    print(matrix_1.toarray())
+    print(matrix_2.toarray())
+    #sp.dia_matrix((adj.diagonal()[np.newaxis, :], [0]), shape=adj.shape)

@@ -1,7 +1,7 @@
 # The implement of [Variational Graph Auto-Encoders](https://arxiv.org/pdf/1611.07308.pdf)
 
-## Data format
-### Cora
+## 1. Data format
+### 1.1 Cora
 |file|shape|content|
 |:---:|:---:|:---:|
 |ind.cora.x|(140, 1442)|?| 
@@ -10,15 +10,15 @@
 |ind.cora.graph|(2708, 2708)|adjacency matrix for links|
 |ind.cora.text.index|(1000, 1)|indexs of test samples on graph|
 
-## Performance
-### performance on Cora
+## 2. Performance
+### 2.1 performance on Cora
 |method|AUC|AP|
 |:---:|:---:|:---:|
 |GAE|0.9047|0.91322|
 |VGAE|||
 
-## Ablation study
-### Influence of "pos_weight" (postive weight) used in loss computation
+## 3. Ablation study
+### 3.1 Influence of "pos_weight" (postive weight) used in loss computation
 |model|pos_weight|AUC|AP|
 |:---:|:---:|:---:|:---:|
 |GAE|original value (about 815)|0.9047|0.91322|
