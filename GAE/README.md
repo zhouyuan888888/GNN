@@ -17,6 +17,9 @@
 |GAE|0.9047|0.91322|
 |VGAE|||
 
+### visualization of training process for GAE
+remark: 1)blue lines represent validation; 2)orange lines represent train.
+
 ![accuracy](image/ap.png)
 ![auc](image/auc.png)
 
