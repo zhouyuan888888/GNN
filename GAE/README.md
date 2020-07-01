@@ -16,7 +16,7 @@
 |method|AUC|AP|
 |:---:|:---:|:---:|
 |GAE|0.9047|0.91322|
-|VGAE|||
+|VGAE|0.9127|0.9222|
 
 ### 2.1.2 visualization of training process for GAE
 **Remark**: 1)blue lines represent validation; 2)orange lines represent train.
@@ -34,6 +34,12 @@ When we modify the code and fix the rate for positive and negative samples to 1:
 ![auc](image/auc_modify.png)
 
 ![loss](image/loss_modify.png)
+
+### 2.1.2 visualization of training process for VGAE
+![accuracy](image/ap_vae.png)
+![auc](image/auc_vae.png) 
+
+![accuracy](image/loss_vae.png)
 
 ## 3. Ablation study
 ### 3.1 Influence of "pos_weight" (postive weight) used in loss computation

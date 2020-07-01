@@ -77,6 +77,7 @@ class GraphConvolution(Layer):
     def _call(self, inputs):
         x = inputs
         x = tf.nn.dropout(x, 1-self.dropout)
+        """self.vars[weights]就是GCN的层"""
         x = tf.matmul(x, self.vars['weights'])
         x = tf.sparse_tensor_dense_matmul(self.adj, x)
         outputs = self.act(x)

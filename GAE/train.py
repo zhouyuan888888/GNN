@@ -31,13 +31,13 @@ val_tflog=SummaryWriter("/home/zhouyuan/code/GNN/GAE/logs/val")
 flags = tf.app.flags
 FLAGS = flags.FLAGS
 flags.DEFINE_float('learning_rate', 0.01, 'Initial learning rate.')
-flags.DEFINE_integer('epochs', 400, 'Number of epochs to train.')
+flags.DEFINE_integer('epochs', 200, 'Number of epochs to train.')
 flags.DEFINE_integer('hidden1', 32, 'Number of units in hidden layer 1.')
 flags.DEFINE_integer('hidden2', 16, 'Number of units in hidden layer 2.')
 flags.DEFINE_float('weight_decay', 0., 'Weight for L2 loss on embedding matrix.')
 flags.DEFINE_float('dropout', 0., 'Dropout rate (1 - keep probability).')
 
-flags.DEFINE_string('model', 'gcn_ae', 'Model string.')
+flags.DEFINE_string('model', 'gcn_vae', 'Model string.')
 flags.DEFINE_string('dataset', ['cora', 'citeseer', 'pubmed'][0], 'Dataset string.')
 flags.DEFINE_integer('features', 1, 'Whether to use features (1) or not (0).')
 
@@ -55,7 +55,7 @@ adj_orig.eliminate_zeros()
 """adj_train不包含train_edges和val_edges的links,
 其中val_edges_false和test_edges_false是用来构造负样本的"""
 
-adj_train, train_edges, val_edges, val_edges_false, test_edges, test_edges_false = mask_test_edges(adj)
+adj_train, train_edges, train_edges_false, val_edges, val_edges_false, test_edges, test_edges_false = mask_test_edges(adj)
 adj = adj_train
 
 if FLAGS.features == 0:
@@ -159,22 +159,24 @@ for epoch in range(FLAGS.epochs):
     # Construct feed dictionary
     feed_dict = construct_feed_dict(adj_norm, adj_label, features, placeholders)
     feed_dict.update({placeholders['dropout']: FLAGS.dropout})
-
     # Run single weight update
-    _, avg_cost, avg_accuracy = sess.run([opt.opt_op, opt.cost, opt.accuracy], feed_dict=feed_dict)
+    _, avg_cost = sess.run([opt.opt_op, opt.cost], feed_dict=feed_dict)
 
-    roc_curr, ap_curr = get_roc_score(val_edges, val_edges_false)
-    val_roc_score.append(roc_curr)
+    train_roc, train_ap = get_roc_score(train_edges, train_edges_false)
+    val_roc, val_ap = get_roc_score(val_edges, val_edges_false)
 
-    print("Epoch:", '%04d' % (epoch + 1), "train_loss=", "{:.5f}".format(avg_cost),
-             "train_acc=", "{:.5f}".format(avg_accuracy), "val_roc=", "{:.5f}".format(val_roc_score[-1]),
-             "val_ap=", "{:.5f}".format(ap_curr),
+    print("Epoch:", '%04d' % (epoch + 1),
+             "train_loss=", "{:.5f}".format(avg_cost),
+             "train_acc=", "{:.5f}".format(train_ap),
+             "val_roc=", "{:.5f}".format(val_roc),
+             "val_ap=", "{:.5f}".format(val_ap),
              "time=", "{:.5f}".format(time.time() - t))
 
-    train_tflog.add_scalar("AP", avg_accuracy, epoch)
+    train_tflog.add_scalar("AP", train_ap, epoch)
     train_tflog.add_scalar("train_loss", avg_cost, epoch)
-    val_tflog.add_scalar("AP", ap_curr, epoch)
-    val_tflog.add_scalar("AUC", roc_curr, epoch)
+    train_tflog.add_scalar("AUC", train_roc, epoch)
+    val_tflog.add_scalar("AP", val_ap, epoch)
+    val_tflog.add_scalar("AUC", val_roc, epoch)
 
 print("Optimization Finished!")
 

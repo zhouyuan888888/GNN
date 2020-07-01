@@ -70,6 +70,20 @@ def mask_test_edges(adj):
         return np.any(rows_close)
 
     """错误的link，即link不在edges_all里面，并且它是虚构出来的"""
+    train_edges_false=[]
+    while len(train_edges_false)<len(train_edges):
+        idx_i = np.random.randint(0, adj.shape[0])
+        idx_j = np.random.randint(0, adj.shape[0])
+        if idx_i==idx_j:
+            continue
+        if ismember([idx_i, idx_j], edges_all):
+            continue
+        if ismember([idx_i, idx_j], np.array(train_edges_false)):
+            continue
+        if ismember([idx_j, idx_i], np.array(train_edges_false)):
+            continue
+        train_edges_false.append([idx_i, idx_j])
+
     test_edges_false = []
     while len(test_edges_false) < len(test_edges):
         idx_i = np.random.randint(0, adj.shape[0])
@@ -122,7 +136,7 @@ def mask_test_edges(adj):
     adj_train = adj_train + adj_train.T
 
     # NOTE: these edge lists only contain single direction of edge!
-    return adj_train, train_edges, val_edges, val_edges_false, test_edges, test_edges_false
+    return adj_train, train_edges, train_edges_false, val_edges, val_edges_false, test_edges, test_edges_false
 
 if __name__=="__main__":
     a=np.array([[1,2,3],[4,5,6],[7,8,9]])
